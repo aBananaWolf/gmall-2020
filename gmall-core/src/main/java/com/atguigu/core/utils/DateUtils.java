@@ -1,6 +1,11 @@
 package com.atguigu.core.utils;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -20,11 +25,16 @@ public class DateUtils {
         return format(date, DATE_PATTERN);
     }
 
+    private final static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
+    private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN);
+
     public static String format(Date date, String pattern) {
-        if(date != null){
-            SimpleDateFormat df = new SimpleDateFormat(pattern);
-            return df.format(date);
+        if (DATE_PATTERN.equals(pattern)){
+            return DATE_FORMATTER.format(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()));
+        } else if (DATE_TIME_PATTERN.equals(pattern)) {
+            return DATE_TIME_FORMATTER.format(LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()));
+        } else {
+            throw new IllegalArgumentException("日期模式串错误");
         }
-        return null;
     }
 }

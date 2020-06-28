@@ -1,0 +1,20 @@
+spring:
+  cloud:
+    nacos:
+      config:
+        # nacos 的dev中有一个公共的配置文件
+        file-extension: yaml
+        server-addr: 192.168.133.133:8848
+        group: UMS_GROUP
+        # nacos如果要共享一段配置，那么必须在同一个名称空间
+        namespace: 2020-6-11-constomizer-namespace-ID
+        # 完美
+        ext-config:
+          - data-id: commons-dev.yaml
+            group: COMMONS_GROUP
+            refrensh: true
+        # 缺点：只能在同一Group中
+        # shared-dataids: shareconfig1.yml,shareconfig2.yml
+
+
+

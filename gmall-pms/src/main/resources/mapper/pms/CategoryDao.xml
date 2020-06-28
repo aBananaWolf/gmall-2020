@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.gmall.pms.dao.CategoryDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.atguigu.gmall.pms.entity.CategoryEntity" id="categoryMap">
+        <result property="catId" column="cat_id"/>
+        <result property="name" column="name"/>
+        <result property="parentCid" column="parent_cid"/>
+        <result property="catLevel" column="cat_level"/>
+        <result property="showStatus" column="show_status"/>
+        <result property="sort" column="sort"/>
+        <result property="icon" column="icon"/>
+        <result property="productUnit" column="product_unit"/>
+        <result property="productCount" column="product_count"/>
+    </resultMap>
+
+    <resultMap type="com.atguigu.gmall.pms.vo.SubCategoryVO" id="listSubCategoryMap">
+        <result property="catId" column="cat_id"/>
+        <result property="name" column="name"/>
+        <result property="parentCid" column="parent_cid"/>
+        <result property="catLevel" column="cat_level"/>
+        <result property="showStatus" column="show_status"/>
+        <result property="sort" column="sort"/>
+        <result property="icon" column="icon"/>
+        <result property="productUnit" column="product_unit"/>
+        <result property="productCount" column="product_count"/>
+        <collection property="subs" ofType="com.atguigu.gmall.pms.entity.CategoryEntity" >
+            <result property="catId" column="second_cat_id"/>
+            <result property="name" column="second_name"/>
+            <result property="parentCid" column="second_parent_cid"/>
+            <result property="catLevel" column="second_cat_level"/>
+            <result property="showStatus" column="second_show_status"/>
+            <result property="sort" column="second_sort"/>
+            <result property="icon" column="second_icon"/>
+            <result property="productUnit" column="second_product_unit"/>
+            <result property="productCount" column="second_product_count"/>
+        </collection>
+    </resultMap>
+    
+    <select id="listSubCategory" parameterType="long" resultMap="listSubCategoryMap">
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    category.cat_id,
+                    category.`name`,
+                    category.parent_cid,
+                    category.cat_level,
+                    category.show_status,
+                    category.sort,
+                    category.icon,
+                    category.product_unit,
+                    category.product_count
+                FROM
+                    pms_category category
+                WHERE
+                    category.parent_cid = #{categoryId}
+            ) secondLevelCategory
+        LEFT JOIN (
+            SELECT
+                    category.cat_id as second_cat_id,
+                    category.`name` as second_name,
+                    category.parent_cid as second_parent_cid,
+                    category.cat_level as second_cat_level,
+                    category.show_status as  second_show_status,
+                    category.sort as second_sort,
+                    category.icon as second_icon,
+                    category.product_unit as  second_product_unit,
+                    category.product_count as  second_product_count
+            FROM
+                pms_category category
+            WHERE
+                category.cat_level = 3
+        ) thirdLevelCategory ON secondLevelCategory.cat_id = thirdLevelCategory.second_parent_cid
+    </select>
+
+</mapper>

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: gmall-pms
+
+
+  cloud:
+    alibaba:
+      seata:
+        tx-service-group: gmall_pms_tx_group
+  rabbitmq:
+    template:
+      mandatory: true
+    host: 192.168.133.133
+    port: 5672
+    virtual-host: /gmall
+    username: gmall
+    password: gmall
+    publisher-confirm-type: simple
+    publisher-returns: true

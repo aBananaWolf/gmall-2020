@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active: dev
+  cloud:
+    alibaba:
+      seata:
+        tx-service-group: gmall_pms_tx_group

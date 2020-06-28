@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: gmall-search
+  rabbitmq:
+    listener:
+      simple:
+          concurrency: 2
+          prefetch: 20
+          max-concurrency: 5
+    template:
+      retry:
+        enabled: true
+        max-attempts: 3
+

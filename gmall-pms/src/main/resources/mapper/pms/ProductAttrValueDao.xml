@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.gmall.pms.dao.ProductAttrValueDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.atguigu.gmall.pms.entity.ProductAttrValueEntity" id="productAttrValueMap">
+        <result property="id" column="id"/>
+        <result property="spuId" column="spu_id"/>
+        <result property="attrId" column="attr_id"/>
+        <result property="attrName" column="attr_name"/>
+        <result property="attrValue" column="attr_value"/>
+        <result property="attrSort" column="attr_sort"/>
+        <result property="quickShow" column="quick_show"/>
+    </resultMap>
+
+    <select id="listSearchAttr" parameterType="long" resultMap="productAttrValueMap">
+        SELECT
+            finalProductAttr.id,
+            finalProductAttr.spu_id,
+            finalProductAttr.attr_id,
+            finalProductAttr.attr_name,
+            finalProductAttr.attr_value
+        FROM
+            (
+                SELECT
+                    pattr.id,
+                    pattr.spu_id,
+                    pattr.attr_id,
+                    pattr.attr_name,
+                    pattr.attr_value
+                FROM
+                    pms_product_attr_value pattr
+                WHERE
+                    pattr.spu_id = #{spuId}
+            ) finalProductAttr
+        LEFT JOIN pms_attr attr ON finalProductAttr.attr_id = attr.attr_id
+        WHERE
+            attr.search_type = 1
+    </select>
+
+</mapper>

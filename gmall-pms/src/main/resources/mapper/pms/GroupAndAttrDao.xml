@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.gmall.pms.dao.GroupAndAttr">
+
+    <resultMap type="com.atguigu.gmall.pms.vo.GroupVO" id="groupAndAttr">
+        <result property="attrGroupId" column="attr_group_id"/>
+        <result property="attrGroupName" column="attr_group_name"/>
+        <result property="sort" column="sort"/>
+        <result property="descript" column="descript"/>
+        <result property="icon" column="icon"/>
+        <result property="catelogId" column="catelog_id"/>
+        <collection property="attrEntities" ofType="com.atguigu.gmall.pms.entity.AttrEntity" autoMapping="true">
+            <result property="attrId" column="attr_id2"/>
+            <result property="icon" column="icon2"/>
+            <result property="catelogId" column="catelog_id2"/>
+        </collection>
+        <collection property="relations" ofType="com.atguigu.gmall.pms.entity.AttrAttrgroupRelationEntity" autoMapping="true">
+            <result property="id" column="id"/>
+            <result property="attrGroupId" column="attr_group_id2"/>
+        </collection>
+    </resultMap>
+
+    <resultMap type="com.atguigu.gmall.pms.vo.GroupVO" id="listGroupAndAttrByCategoryId">
+        <result property="attrGroupId" column="attr_group_id"/>
+        <result property="attrGroupName" column="attr_group_name"/>
+        <result property="sort" column="sort"/>
+        <result property="descript" column="descript"/>
+        <result property="icon" column="group_icon"/>
+        <result property="catelogId" column="group_catelog_id"/>
+        <collection property="relations" ofType="com.atguigu.gmall.pms.entity.AttrAttrgroupRelationEntity" autoMapping="true">
+            <result property="id" column="id"/>
+            <result property="attrId" column="relation_attr_id"/>
+            <result property="attrGroupId" column="relation_attr_group_id"/>
+            <result property="attrSort" column="attr_sort"/>
+        </collection>
+        <collection property="attrEntities" ofType="com.atguigu.gmall.pms.entity.AttrEntity" >
+            <result property="attrId" column="attr_id"/>
+            <result property="attrName" column="attr_name"/>
+            <result property="searchType" column="search_type"/>
+            <result property="valueType" column="value_type"/>
+            <result property="icon" column="icon"/>
+            <result property="valueSelect" column="value_select"/>
+            <result property="attrType" column="attr_type"/>
+            <result property="enable" column="enable"/>
+            <result property="catelogId" column="catelog_id"/>
+            <result property="showDesc" column="show_desc"/>
+        </collection>
+    </resultMap>
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.atguigu.gmall.pms.entity.AttrEntity" id="attrMap">
+        <result property="attrId" column="attr_id"/>
+        <result property="attrName" column="attr_name"/>
+        <result property="searchType" column="search_type"/>
+        <result property="valueType" column="value_type"/>
+        <result property="icon" column="icon"/>
+        <result property="valueSelect" column="value_select"/>
+        <result property="attrType" column="attr_type"/>
+        <result property="enable" column="enable"/>
+        <result property="catelogId" column="catelog_id"/>
+        <result property="showDesc" column="show_desc"/>
+    </resultMap>
+
+
+
+    <select id="selectByGroup" parameterType="Long" resultMap="groupAndAttr">
+        SELECT
+            a.*, attr.attr_id AS 'attr_id2',
+            attr.attr_name,
+            attr.search_type,
+            attr.value_type,
+            attr.icon AS 'icon2',
+            attr.value_select,
+            attr.attr_type,
+            attr.`enable`,
+            attr.catelog_id AS 'catelog_id2',
+            attr.show_desc
+        FROM
+            (
+                SELECT
+                    agroup.*, relation.id,
+                    relation.attr_id,
+                    relation.attr_group_id AS 'attr_group_id2',
+                    relation.attr_sort
+                FROM
+                    pms_attr_group agroup
+                LEFT JOIN pms_attr_attrgroup_relation relation ON agroup.attr_group_id = relation.attr_group_id
+                WHERE
+                    agroup.attr_group_id = #{id}
+            ) a
+        LEFT JOIN pms_attr attr ON a.attr_id = attr.attr_id
+    </select>
+
+    <select id="listGroupAndAttrByCategoryId" parameterType="Long" resultMap="listGroupAndAttrByCategoryId">
+        SELECT
+            *
+        FROM
+        (
+            SELECT
+                agroup.attr_group_id,
+                agroup.attr_group_name,
+                agroup.sort,
+                agroup.icon AS 'group_icon',
+                agroup.catelog_id AS 'group_catelog_id',
+                relation.id,
+                relation.attr_id AS 'relation_attr_id',
+                relation.attr_group_id AS 'relation_attr_group_id',
+                relation.attr_sort
+            FROM
+                pms_attr_attrgroup_relation relation
+            LEFT JOIN (
+                SELECT
+                    *
+                FROM
+                    pms_attr_group inner_group
+                WHERE
+                    inner_group.catelog_id = #{cateloryId}
+            ) agroup ON relation.attr_group_id = agroup.attr_group_id
+        ) relation_group
+        LEFT JOIN pms_attr attr ON attr.attr_id = relation_group.relation_attr_id where attr.attr_type = 1
+    </select>
+
+</mapper>
