@@ -11,6 +11,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.HashSet;
+
 /**
  * @author wyl
  * @create 2020-06-27 12:16
@@ -32,7 +34,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 // 选择扫描-开始，可以有注解扫描
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.atguigu.gmall.pms"))
+                .apis(RequestHandlerSelectors.basePackage("com.atguigu.gmall.index"))
                 .build();
         // 选择扫描-结束
     }

@@ -19,7 +19,7 @@ public class MyTest {
 
     @Test
     public void test(){
-        List<SkuSaleAttrValueEntity> skuSaleAttrValueEntities = skuSaleAttrValueService.listSearchAttr(7L);
+        List<SkuSaleAttrValueEntity> skuSaleAttrValueEntities = skuSaleAttrValueService.listSaleAttrs(7L);
         System.out.println(skuSaleAttrValueEntities);
     }
 }

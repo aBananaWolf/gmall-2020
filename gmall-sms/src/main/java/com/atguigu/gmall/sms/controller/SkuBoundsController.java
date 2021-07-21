@@ -1,6 +1,7 @@
 package com.atguigu.gmall.sms.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -8,6 +9,7 @@ import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.core.bean.Resp;
 import com.atguigu.gmall.sms.api.SMSPreferentialApi;
+import com.atguigu.gmall.sms.vo.SaleVO;
 import com.atguigu.gmall.sms.vo.SkuPreferentialVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +41,15 @@ public class SkuBoundsController implements SMSPreferentialApi {
     @ApiOperation("保存优惠信息")
     public void savePreferentialInfo(@RequestBody SkuPreferentialVO skuPreferentialVO) {
         skuBoundsService.savePreferentialInfo(skuPreferentialVO);
+    }
+    /**
+     * 所有优惠信息查询
+     */
+    @ApiOperation("详情查询")
+    @GetMapping("/all/preferential/{skuId}")
+    @PreAuthorize("hasAuthority('sms:spubounds:info')")
+    public List<SaleVO> allPreferential(@PathVariable("skuId") Long skuId){
+        return skuBoundsService.getAllPreferential(skuId);
     }
 
     /**

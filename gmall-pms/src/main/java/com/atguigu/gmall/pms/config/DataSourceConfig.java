@@ -25,7 +25,7 @@ public class DataSourceConfig {
     private String mapperLocations;
     @Bean
     @ConfigurationProperties(prefix = "spring.datasource")
-    public DataSource druidDataSource(@Value("${spring.datasource.url}") String url) {
+    public DataSource hikariDataSource(@Value("${spring.datasource.url}") String url) {
         HikariDataSource hikariDataSource = new HikariDataSource();
         hikariDataSource.setJdbcUrl(url);
         return hikariDataSource;

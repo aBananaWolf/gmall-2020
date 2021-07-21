@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -24,6 +25,7 @@ public class BasicMessageSender {
     private RabbitTemplate rabbitTemplate;
 
     private String SEND_MESSAGE_COUNT = "SendMessageCount";
+    @Value("${spring.rabbitmq.template.retry.max-attempts}")
     private Integer SEND_MESSAGE_MAX = 3;
 
     private final RabbitTemplate.ReturnCallback returnCallback = new RabbitTemplate.ReturnCallback() {
@@ -42,6 +44,7 @@ public class BasicMessageSender {
                     Integer sendCount = correlationData.getReturnedMessage().getMessageProperties().getHeader("sendCount");
                     if (sendCount > SEND_MESSAGE_MAX) {
                         log.error("out of retries for send message");
+                        // 发送邮件(非常重要，视这里为重试次数用尽)
                     }
                 }
             }

@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: gmall-item
+  jackson:
+    default-property-inclusion: non_null

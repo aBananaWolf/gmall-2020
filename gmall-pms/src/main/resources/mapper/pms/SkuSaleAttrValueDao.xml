@@ -13,7 +13,7 @@
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
 
-    <select id="listSearchAttr" parameterType="Long" resultMap="skuSaleAttrValueMap">
+    <select id="listSaleAttrsBySkuId" parameterType="Long" resultMap="skuSaleAttrValueMap">
          SELECT
             saleAttr.id,
             saleAttr.sku_id,
@@ -25,6 +25,26 @@
             pms_sku_sale_attr_value saleAttr
         WHERE
             saleAttr.sku_id = #{skuId}
+    </select>
+
+    <select id="listSaleAttrsBySpuId" parameterType="Long" resultMap="skuSaleAttrValueMap">
+        SELECT
+            saleAttrSet.*
+        FROM
+            (
+                SELECT
+                    skuSet.sku_id
+                FROM
+                    pms_sku_info skuSet
+                WHERE
+                    skuSet.spu_id = #{spuId}
+            ) skuIds
+        LEFT JOIN (
+            SELECT
+                *
+            FROM
+                pms_sku_sale_attr_value
+        ) saleAttrSet ON saleAttrSet.sku_id = skuIds.sku_id
     </select>
 
 </mapper>

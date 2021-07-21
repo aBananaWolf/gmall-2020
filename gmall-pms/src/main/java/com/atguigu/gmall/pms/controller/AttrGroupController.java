@@ -45,7 +45,7 @@ public class AttrGroupController {
         if (queryCondition.getLimit() != null && queryCondition.getPage() != null)
             // 这个是单纯的组参数
             return Resp.ok(attrGroupService.listGroupByCondition(categoryId,queryCondition));
-        // GroupVO 是自己封装的
+        // GroupVO 是自己封装的，这是为了获取商品的 -基本属性-
         List<GroupVO> groupVoList = attrGroupService.listGroupAndAttrByCategoryId(categoryId);
         return Resp.ok(groupVoList);
     }

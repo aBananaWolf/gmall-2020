@@ -1,5 +1,6 @@
 package com.atguigu.gmall.search.mq;
 
+import com.atguigu.gmall.search.properties.SearchMessageProperties;
 import com.atguigu.gmall.search.service.ImportDataService;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
@@ -21,6 +22,8 @@ import java.io.IOException;
 public class SearchDataListener {
     @Autowired
     private ImportDataService importDataService;
+    @Autowired
+    private SearchMessageProperties searchMessageProperties;
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "${gmall.message.search.queue-name}",durable = "true", ignoreDeclarationExceptions = "true"),

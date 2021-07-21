@@ -33,8 +33,13 @@ public class SkuSaleAttrValueServiceImpl extends ServiceImpl<SkuSaleAttrValueDao
     }
 
     @Override
-    public List<SkuSaleAttrValueEntity> listSearchAttr(Long skuId) {
-        return attrValueDao.listSearchAttr(skuId);
+    public List<SkuSaleAttrValueEntity> listSaleAttrs (Long skuId) {
+        return attrValueDao.listSaleAttrsBySkuId(skuId);
+    }
+
+    @Override
+    public List<SkuSaleAttrValueEntity> listSaleAttrsBySpuId(Long spuId) {
+        return attrValueDao.listSaleAttrsBySpuId(spuId);
     }
 
 

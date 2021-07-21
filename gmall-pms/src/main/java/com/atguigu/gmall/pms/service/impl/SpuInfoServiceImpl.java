@@ -163,10 +163,9 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
     /**
      * 保存sku销售属性
      * @param skuVO
-     * @param id
      */
     private void saveSkuSaleAttrValue(SkuInfoVO skuVO) {
-        skuVO.setSaleAttrs(skuSaleAttrValueService.listSearchAttr(skuVO.getSkuId()));
+        skuVO.setSaleAttrs(skuSaleAttrValueService.listSaleAttrs(skuVO.getSkuId()));
         if (!CollectionUtils.isEmpty(skuVO.getSaleAttrs())) {
             skuVO.getSaleAttrs()
                     .forEach(saleAttr -> {

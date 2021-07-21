@@ -40,6 +40,9 @@ public class ImportDataServiceImpl implements ImportDataService {
     private PMSDataImportService pmsDataImportService;
 
     @Override
+    /**
+     * 传入Goods 会转为json保存到es中
+     */
     public void importData(Goods goods) {
         try {
             String goodsStr = objectMapper.writeValueAsString(goods);
@@ -74,10 +77,13 @@ public class ImportDataServiceImpl implements ImportDataService {
 
         // 搜索数据
         Goods goods = new Goods();
+        queryDataAndImport(spu, skuInitialPage, pageSize, skuDataImportFinish, skuQueryCondition, goodsSearchAttrs, goods);
+    }
 
-        // sku 查询响应数据
-        Resp<PageVo> skuPageVoResp;
-        PageVo skuPage;
+    public void queryDataAndImport(SpuInfoEntity spu, Long skuInitialPage, Long pageSize, boolean skuDataImportFinish, QueryCondition skuQueryCondition, ArrayList<SearchAttr> goodsSearchAttrs, Goods goods) {
+        CategoryEntity categoryEntity;
+        BrandEntity brandEntity;
+        List<ProductAttrValueEntity> attrEntities;
         List<SkuInfoEntity> skuList;
         if ((categoryEntity = pmsDataImportService.categoryInfo(spu.getCatalogId())) != null
                 && (brandEntity = pmsDataImportService.brandInfo(spu.getBrandId())) != null

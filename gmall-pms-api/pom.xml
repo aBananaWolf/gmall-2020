@@ -12,6 +12,18 @@
     <artifactId>gmall-pms-api</artifactId>
     <dependencies>
         <dependency>
+            <artifactId>gmall-sms-api</artifactId>
+            <groupId>com.atguigu</groupId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>*</artifactId>
+                    <groupId>*</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>

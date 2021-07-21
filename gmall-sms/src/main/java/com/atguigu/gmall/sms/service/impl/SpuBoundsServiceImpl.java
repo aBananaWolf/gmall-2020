@@ -1,5 +1,7 @@
 package com.atguigu.gmall.sms.service.impl;
 
+import com.atguigu.gmall.sms.vo.SaleVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -26,5 +28,4 @@ public class SpuBoundsServiceImpl extends ServiceImpl<SpuBoundsDao, SpuBoundsEnt
 
         return new PageVo(page);
     }
-
 }

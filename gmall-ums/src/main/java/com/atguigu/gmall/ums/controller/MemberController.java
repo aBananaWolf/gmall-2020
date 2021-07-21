@@ -9,6 +9,7 @@ import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.core.bean.Resp;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +30,35 @@ import com.atguigu.gmall.ums.service.MemberService;
 @Api(tags = "会员 管理")
 @RestController
 @RequestMapping("ums/member")
+@Slf4j
 public class MemberController {
     @Autowired
     private MemberService memberService;
+
+    @ApiOperation("校验数据")
+    @GetMapping("/check/{data}/{type}")
+    public Resp<Boolean> checkData(@PathVariable("data") String data, @PathVariable("type") String type) {
+        Boolean flag = memberService.checkData(data,type);
+        return Resp.ok(flag);
+    }
+    @ApiOperation("注册")
+    @PostMapping("/register")
+    public void register(MemberEntity memberEntity, String code) {
+        memberService.registerMember(memberEntity,code);
+    }
+
+    @ApiOperation("查询详情")
+    @PostMapping("/query")
+    public MemberEntity queryInfo(@RequestParam("username") String username, @RequestParam("password") String password) {
+        MemberEntity memberEntity = null;
+        try {
+            memberEntity = memberService.queryInfo(username, password);
+        } catch (Exception e) {
+            // 怎么看都不安全，大家都懂
+            log.warn(e.getMessage() + "username：" + username + "password: " + password);
+        }
+        return memberEntity;
+    }
 
     /**
      * 列表

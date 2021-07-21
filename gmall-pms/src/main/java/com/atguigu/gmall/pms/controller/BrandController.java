@@ -77,7 +77,6 @@ public class BrandController {
     @PreAuthorize("hasAuthority('pms:brand:update')")
     public Resp<Object> update(@RequestBody BrandEntity brand){
 		brandService.updateById(brand);
-
         return Resp.ok(null);
     }
 

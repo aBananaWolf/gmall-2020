@@ -1,6 +1,7 @@
 package com.atguigu.gmall.pms.config;
 
 import com.atguigu.gmall.pms.properties.SearchMessageProperties;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
@@ -20,5 +21,22 @@ public class BasicMQConfig {
     @Bean
     public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
+    }
+
+    @Bean
+    public Exchange exchange() {
+        Exchange exchange = new ExchangeBuilder("aaaa", "topic").build();
+        return exchange;
+    }
+    @Bean
+    public Queue queue() {
+        Queue queue = new Queue("bbbb", true, false ,false);
+        return queue;
+    }
+
+    @Bean
+    public Binding binding(Exchange exchange, Queue queue) {
+        Binding cccc = BindingBuilder.bind(queue).to(exchange).with("cccc").noargs();
+        return cccc;
     }
 }

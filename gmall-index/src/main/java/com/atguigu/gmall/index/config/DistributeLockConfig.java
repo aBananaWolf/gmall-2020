@@ -44,6 +44,7 @@ public class DistributeLockConfig {
 
     @Around("pointcut()")
     public Object DistributeLock(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        
         Object result = null;
         // 强转为方法签名
         MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
@@ -59,8 +60,7 @@ public class DistributeLockConfig {
             finalKey = prefix + key;
         else
             finalKey = prefix + proceedingJoinPoint.getArgs()[0];
-        // 判断是否为List
-        boolean isList = false;
+
         // 返回的类型
         Type genericReturnType = signature.getMethod().getGenericReturnType();
 
@@ -77,7 +77,7 @@ public class DistributeLockConfig {
         // 获取分布式锁
         RLock lock = client.getLock(proceedingJoinPoint.getTarget().getClass().getAnnotation(GmallCache.class).lockName());
         lock.lock();
-        // 再次检测，加速期间可能已经有线程获取
+        // 再次检测，加锁期间可能已经有线程获取
         cacheHit = redisTemplate.opsForValue().get(finalKey);
         if (cacheHit != null) {
             return parseJson(signature, cacheHit);

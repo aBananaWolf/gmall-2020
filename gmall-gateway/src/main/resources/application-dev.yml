@@ -1,3 +1,18 @@
 spring:
   application:
     name: gmall-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: add_request_parameter_route
+          uri: https://example.org
+
+          filters:
+            - AddRequestParameter=red, blue
+          predicates:
+
+com:
+  atguigu:
+    # 前端工程
+    cors:
+      address: http://127.0.0.1:1000, http://127.0.0.1:2000

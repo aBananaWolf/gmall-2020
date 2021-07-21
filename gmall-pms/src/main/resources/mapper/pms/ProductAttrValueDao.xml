@@ -14,6 +14,15 @@
         <result property="quickShow" column="quick_show"/>
     </resultMap>
 
+    <!--item 页面所需实体-->
+    <resultMap type="com.atguigu.gmall.pms.vo.ItemGroupVO" id="itemGroupVO">
+<!--        <result property="id" column="attr_group_id" />-->
+        <result property="name" column="attr_group_name" />
+        <collection property="baseAttrs" resultMap="productAttrValueMap">
+
+        </collection>
+    </resultMap>
+
     <select id="listSearchAttr" parameterType="long" resultMap="productAttrValueMap">
         SELECT
             finalProductAttr.id,
@@ -37,6 +46,36 @@
         LEFT JOIN pms_attr attr ON finalProductAttr.attr_id = attr.attr_id
         WHERE
             attr.search_type = 1
+    </select>
+
+    <select id="listGroupAndProductAttrBySpuId" resultMap="itemGroupVO">
+        SELECT
+            finalGroup.attr_group_id,
+            finalGroup.attr_group_name,
+            productAttr.*
+        FROM
+            (
+                SELECT
+                    groupSet.attr_group_id,
+                    groupSet.attr_group_name,
+                    groupSet.attr_id AS 'transent_attr_id'
+                FROM
+                    (
+                        SELECT
+                            agroup.attr_group_id,
+                            agroup.attr_group_name,
+                            relation.attr_id
+                        FROM
+                            pms_attr_group agroup
+                        LEFT JOIN pms_attr_attrgroup_relation relation ON relation.attr_group_id = agroup.attr_group_id
+                        WHERE
+                            agroup.catelog_id = #{categoryId}
+                    ) groupSet
+                LEFT JOIN pms_attr ON pms_attr.attr_id = groupSet.attr_id
+            ) finalGroup
+        LEFT JOIN pms_product_attr_value productAttr ON finalGroup.transent_attr_id = productAttr.attr_id
+        WHERE
+            productAttr.spu_id = #{spuId}
     </select>
 
 </mapper>
